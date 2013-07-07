@@ -66,9 +66,9 @@ public class Compiler implements Opcodes
             // dump the compiled class bytes if required
             Transformer.maybeDumpClass(externalName, classBytes);
             // ensure the class is loaded
-            // think we need to load the generated helper using the class loader of the trigger class
-            ClassLoader loader = rule.getLoader();
-            adapterClass = loadHelperAdapter(loader, externalName, classBytes);
+            // we need to use the rule own class loader, so all byteman classes
+            // are loaded by the same one (helpers in particular).
+            adapterClass = loadHelperAdapter(rule.getClass().getClassLoader(), externalName, classBytes);
         } catch(CompileException ce) {
             throw ce;
         } catch (Throwable th) {
